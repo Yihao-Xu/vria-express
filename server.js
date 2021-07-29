@@ -22,7 +22,7 @@ ws_server = ws.createServer(function (socket){
         http_lock = false;
 
     });
-    socket.on('connection', function (){
+    socket.on('connect', function (){
         console.log("收到ws连接");
     })
 });
@@ -54,14 +54,17 @@ function set_response(response){
     }
 }
 
-http_server.get('/getChartData', (request, response) => {
+http_server.post('/getChartData', (request, response) => {
     console.log('收到请求');
-    let body = request.body;
-    // console.log(body);
+
+    /** 因为Unity那边http请求过于晦涩的原因，这里将图表数据作为字符串放在body的'data'中。
+     * */
+    let body = JSON.parse(request.body['data']);
+    console.log(body);
+
     http_lock = true;
     ws_server.connections.forEach(function (conn){
         console.log('发送ws消息');
-        // console.log(body);
         conn.sendText(JSON.stringify(body));
     })
     set_response(response);
