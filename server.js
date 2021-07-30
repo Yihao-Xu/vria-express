@@ -72,6 +72,22 @@ http_server.post('/getChartData', (request, response) => {
 })
 
 
+/**
+ * 用来在postman上测试
+  */
+http_server.post('/getChartDataTest', (request, response) => {
+    console.log('收到请求');
+    let body = request.body;
+    console.log(body);
+
+    http_lock = true;
+    ws_server.connections.forEach(function (conn){
+        console.log('发送ws消息');
+        conn.sendText(JSON.stringify(body));
+    })
+    set_response(response);
+
+})
 
 
 http_server.listen(3001, function (){
