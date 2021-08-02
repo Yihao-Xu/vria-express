@@ -37,8 +37,8 @@ const express = require('express');
 const http_server = express();
 
 // 设置中间件
-http_server.use(express.json());
-http_server.use(express.urlencoded({extended:true}));
+http_server.use(express.json({limit:"100mb"}));
+http_server.use(express.urlencoded({limit:"100mb", extended:true}));
 
 function set_response(response){
     if(http_lock){
@@ -60,7 +60,7 @@ http_server.post('/getChartData', (request, response) => {
     /** 因为Unity那边http请求过于晦涩的原因，这里将图表数据作为字符串放在body的'data'中。
      * */
     let body = JSON.parse(request.body['data']);
-    console.log(body);
+    // console.log(body);
 
     http_lock = true;
     ws_server.connections.forEach(function (conn){
@@ -78,7 +78,7 @@ http_server.post('/getChartData', (request, response) => {
 http_server.post('/getChartDataTest', (request, response) => {
     console.log('收到请求');
     let body = request.body;
-    console.log(body);
+    // console.log(body);
 
     http_lock = true;
     ws_server.connections.forEach(function (conn){
